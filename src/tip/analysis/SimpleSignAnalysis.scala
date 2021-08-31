@@ -76,14 +76,20 @@ class SimpleSignAnalysis(cfg: ProgramCfg)(implicit declData: DeclarationData) ex
     NoPointers.assertContainsNode(n.data)
     NoCalls.assertContainsNode(n.data)
     NoRecords.assertContainsNode(n.data)
+    var m = s
     n match {
       case r: CfgStmtNode =>
         r.data match {
           // var declarations
-          case varr: AVarStmt => ??? //<--- Complete here
+          case varr: AVarStmt => {
+            for (x <- varr.declIds) {
+              m = m + (x -> SignLattice.bottom)
+            }
+            m
+          }
 
           // assignments
-          case AAssignStmt(id: AIdentifier, right, _) => ??? //<--- Complete here
+          case AAssignStmt(id: AIdentifier, right, _) => s + (declData(id) -> eval(right, s)) //<--- Complete here
 
           // all others: like no-ops
           case _ => s

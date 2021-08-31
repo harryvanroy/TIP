@@ -92,4 +92,13 @@ object SignLattice extends FlatLattice[SignElement.Value] with LatticeWithOps {
   def eqq(a: Element, b: Element): Element = lookup(absEq, a, b)
 
   def gt(a: Element, b: Element): Element = lookup(absGt, a, b)
+
+  def main(args: Array[String]): Unit = {
+    println("Testing plus...")
+    for (a <- signValues.keys) {
+      val b = Neg
+      val out = plus(a, b)
+      println(s"$a + $b gives $out")
+    }
+  }
 }
