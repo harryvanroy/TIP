@@ -67,10 +67,10 @@ trait ValueAnalysisMisc {
       case r: CfgStmtNode =>
         r.data match {
           // var declarations
-          case varr: AVarStmt => ??? //<--- Complete here
+          case varr: AVarStmt => s ++ (for (v <- varr.declIds) yield (v,valuelattice.bottom)) //<--- Complete here
 
           // assignments
-          case AAssignStmt(id: AIdentifier, right, _) => ??? //<--- Complete here
+          case AAssignStmt(id: AIdentifier, right, _) => s + (id.declaration -> eval(right, s)) //<--- Complete here
 
           // all others: like no-ops
           case _ => s
