@@ -1,0 +1,11 @@
+main(){
+    var lights, bright;
+    bright = 1;
+    lights = Device(1,2);
+    output(lights.read);
+    lights.write(1);
+    output(lights.read);
+    lights.write(bright + 1);    // too large!
+    lights.disconnect;
+    return 0;
+}

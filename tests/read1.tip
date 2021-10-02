@@ -1,0 +1,6 @@
+main(){
+    var lights;
+    lights = Device(1,2);
+    output(lights.read);
+    return 0;
+}

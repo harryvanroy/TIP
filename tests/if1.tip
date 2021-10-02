@@ -1,0 +1,16 @@
+// Allows farmer to choose safe temperatures for hot mash feeding.
+main() {
+    var hotmash,temp,result;
+    hotmash = Device(2, 1);
+    temp = input;
+    result = 1;
+    if (temp > 10) {
+      if (40 > temp) {
+        // safe temperature, so heat the mash:
+        hotmash.write(temp);
+	result = 0;
+      }
+    }
+    output(hotmash.read);
+    return result;
+}

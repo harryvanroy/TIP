@@ -1,0 +1,21 @@
+main() {
+   var feed, siren, status;
+   feed = Device(3, 2);   // connect to Flow device number 2.
+   feed.write(5);         // set it half open
+   //sleep(60);             // for 60 seconds
+   feed.write(0);         // then shut it 
+   //sleep(2);              // wait 2 seconds
+   if (feed.read > 0) {
+      siren = Device(1, 0); // connect to Switch 0 (the warning siren) 
+      siren.write(1);     // turn on the warning siren
+      //sleep(30);          // leave siren on for 30 seconds
+      siren.write(0);     // turn siren off
+      siren.disconnect;   // disconnect from the siren
+      status = 1;
+   } else {
+     feed.disconnect;     // disconnect from the Flow device
+     status = 0;
+   }
+   return status;
+}
+

@@ -1,0 +1,15 @@
+// check the chicken feeder
+main(){
+    var feeder, flow, result;
+    feeder = Device(3, 2);
+    flow = feeder.read;
+    output(flow);
+
+    // return 1 if chickens are being fed well
+    if (flow > 4) {
+        result = 1;
+    } else {
+        result = 0;
+    }
+    return result;
+}

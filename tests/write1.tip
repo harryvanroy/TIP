@@ -1,0 +1,9 @@
+main(){
+    var lights;
+    lights = Device(1,2);
+    output(lights.read);
+    lights.write(1);
+    output(lights.read);
+    lights.disconnect;
+    return 0;
+}

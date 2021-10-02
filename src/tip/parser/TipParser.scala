@@ -46,6 +46,10 @@ class TipParser(val input: ParserInput) extends Parser with Comments {
     val KNULL = "null"
     val KOUTPUT = "output"
     val KERROR = "error"
+    val KDEVICE = "Device"
+    val KREAD = "read"
+    val KWRITE = "write"
+    val KDISCONNECT = "disconnect"
   }
 
   val keywords = Set(
@@ -58,7 +62,11 @@ class TipParser(val input: ParserInput) extends Parser with Comments {
     LanguageKeywords.KRETURN,
     LanguageKeywords.KNULL,
     LanguageKeywords.KOUTPUT,
-    LanguageKeywords.KERROR
+    LanguageKeywords.KERROR,
+    LanguageKeywords.KDEVICE,
+    LanguageKeywords.KREAD,
+    LanguageKeywords.KWRITE,
+    LanguageKeywords.KDISCONNECT
   )
 
   def InputLine = rule {
