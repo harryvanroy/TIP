@@ -66,6 +66,10 @@ object FragmentCfg {
           val bodyG = recGen(whl.innerBlock)
           val loopingBody = whileG ~ bodyG ~ whileG
           loopingBody | whileG
+        case _: ADeviceDisconnect =>
+          nodeBuilder(CfgStmtNode(data = node))
+        case _: ADeviceWrite =>
+          nodeBuilder(CfgStmtNode(data = node))
         case _: AErrorStmt =>
           nodeBuilder(CfgStmtNode(data = node))
         case _: AExpr | _: AIdentifierDeclaration | _: AProgram => ???

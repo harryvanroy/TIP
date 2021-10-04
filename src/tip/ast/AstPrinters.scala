@@ -26,9 +26,9 @@ object AstPrinters {
         n: AstNode =>
           n match {
             case ADevice(deviceType, deviceNumber, _) =>
-              s"Device(${deviceType.print(printer)}, ${deviceNumber.print(printer)})"
+              s"Device(${deviceType.print(printer)},${deviceNumber.print(printer)})"
             case ADeviceRead(device, _) =>
-              s"read device ${device.print(printer)}"
+              s"${device.print(printer)}.read"
             case ADeviceWrite(device, writeVal, _) =>
               s"write ${writeVal.print(printer)} to device ${device.print(printer)}"
             case ADeviceDisconnect(device, _) =>

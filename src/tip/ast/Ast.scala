@@ -153,9 +153,9 @@ case class AVarStmt(declIds: List[AIdentifierDeclaration], loc: Loc) extends ASt
 
 case class AWhileStmt(guard: AExpr, innerBlock: AStmtInNestedBlock, loc: Loc) extends AStmtInNestedBlock
 
-case class ADeviceWrite(device: AIdentifier, exp: AExpr, loc: Loc) extends AStmt
+case class ADeviceWrite(device: AIdentifier, exp: AExpr, loc: Loc) extends AStmtInNestedBlock
 
-case class ADeviceDisconnect(device: AIdentifier, loc: Loc) extends AStmt
+case class ADeviceDisconnect(device: AIdentifier, loc: Loc) extends AStmtInNestedBlock
 
 //////////////// Program and function ///////////////
 

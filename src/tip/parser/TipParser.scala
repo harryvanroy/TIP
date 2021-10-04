@@ -152,6 +152,8 @@ class TipParser(val input: ParserInput) extends Parser with Comments {
 
   def Atom: Rule1[AExpr] = rule {
     (FunApp
+      | DeviceCreate
+      | DeviceRead
       | Number
       | Parens
       | PointersExpression
@@ -164,7 +166,7 @@ class TipParser(val input: ParserInput) extends Parser with Comments {
     "(" ~ Expression ~ ")" ~> (a => a)
   }
 
-  def Number: Rule1[AExpr] = rule {
+  def Number: Rule1[ANumber] = rule {
     push(cursor) ~ capture(Digits) ~> ((cur: Int, n: String) => ANumber(n.toInt, cur))
   }
 
@@ -223,7 +225,7 @@ class TipParser(val input: ParserInput) extends Parser with Comments {
   }
 
   def Statement: Rule1[AStmtInNestedBlock] = rule {
-    Output | Assigment | Block | While | If | Error
+    Output | Assigment | Block | While | If | Error | DeviceWrite | DeviceDisconnect
   }
 
   def Assigment: Rule1[AStmtInNestedBlock] = rule {
@@ -293,11 +295,11 @@ class TipParser(val input: ParserInput) extends Parser with Comments {
     push(cursor) ~ Identifier ~ "." ~ LanguageKeywords.KREAD ~> ((cur: Int, id: AIdentifier) => ADeviceRead(id, cur))
   }
 
-  def DeviceWrite: Rule1[ADeviceWrite] = rule {
-    push(cursor) ~ Identifier ~ "." ~ LanguageKeywords.KWRITE ~ "(" ~ Expression ~ ")" ~> ((cur: Int, id: AIdentifier, e: AExpr) => ADeviceWrite(id, e, cur))
+  def DeviceWrite: Rule1[AStmtInNestedBlock] = rule {
+    push(cursor) ~ Identifier ~ "." ~ LanguageKeywords.KWRITE ~ "(" ~ Expression ~ ")" ~ ";" ~> ((cur: Int, id: AIdentifier, e: AExpr) => ADeviceWrite(id, e, cur))
   }
 
-  def DeviceDisconnect: Rule1[ADeviceDisconnect] = rule {
-    push(cursor) ~ Identifier ~ "." ~ LanguageKeywords.KDISCONNECT ~> ((cur: Int, id: AIdentifier) => ADeviceDisconnect(id, cur))
+  def DeviceDisconnect: Rule1[AStmtInNestedBlock] = rule {
+    push(cursor) ~ Identifier ~ "." ~ LanguageKeywords.KDISCONNECT ~ ";" ~> ((cur: Int, id: AIdentifier) => ADeviceDisconnect(id, cur))
   }
 }
