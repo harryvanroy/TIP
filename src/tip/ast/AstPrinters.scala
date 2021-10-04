@@ -30,7 +30,7 @@ object AstPrinters {
             case ADeviceRead(device, _) =>
               s"${device.print(printer)}.read"
             case ADeviceWrite(device, writeVal, _) =>
-              s"write ${writeVal.print(printer)} to device ${device.print(printer)}"
+              s"${device.print(printer)}.write(${writeVal.print(printer)})"
             case ADeviceDisconnect(device, _) =>
               s"disconnect device ${device.print(printer)}"
             case ACallFuncExpr(targetFun, args, _) =>

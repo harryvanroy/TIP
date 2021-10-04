@@ -55,12 +55,6 @@ class Normalizer {
     }
 
   /**
-    * Normalizes an ADeviceWrite
-    */
-  def normalizeDeviceWrite(dw: ADeviceWrite): ADeviceWrite =
-    dw.copy(exp = normalizeExpr(dw.exp))
-
-  /**
     * Normalizes an ARecordField.
     */
   def normalizeRecordField(f: ARecordField): ARecordField =
