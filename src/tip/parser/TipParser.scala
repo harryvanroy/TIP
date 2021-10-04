@@ -284,4 +284,20 @@ class TipParser(val input: ParserInput) extends Parser with Comments {
   def FunActualArgs: Rule1[Seq[AExpr]] = rule {
     "(" ~ zeroOrMore(Expression).separatedBy(",") ~ ")"
   }
+
+  def DeviceCreate: Rule1[ADevice] = rule {
+    push(cursor) ~ LanguageKeywords.KDEVICE ~ "(" ~ Number ~ "," ~ Number ~ ")" ~> ((cur: Int, n1: ANumber, n2: ANumber) => ADevice(n1, n2, cur))
+  }
+
+  def DeviceRead: Rule1[ADeviceRead] = rule {
+    push(cursor) ~ Identifier ~ "." ~ LanguageKeywords.KREAD ~> ((cur: Int, id: AIdentifier) => ADeviceRead(id, cur))
+  }
+
+  def DeviceWrite: Rule1[ADeviceWrite] = rule {
+    push(cursor) ~ Identifier ~ "." ~ LanguageKeywords.KWRITE ~ "(" ~ Expression ~ ")" ~> ((cur: Int, id: AIdentifier, e: AExpr) => ADeviceWrite(id, e, cur))
+  }
+
+  def DeviceDisconnect: Rule1[ADeviceDisconnect] = rule {
+    push(cursor) ~ Identifier ~ "." ~ LanguageKeywords.KDISCONNECT ~> ((cur: Int, id: AIdentifier) => ADeviceDisconnect(id, cur))
+  }
 }

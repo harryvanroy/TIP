@@ -66,6 +66,16 @@ trait DepthFirstAstVisitor[A] {
         visit(alloc.exp, arg)
       case ref: AVarRef =>
         visit(ref.id, arg)
+      case device: ADevice =>
+        visit(device.deviceType, arg)
+        visit(device.deviceNumber, arg)
+      case deviceRead: ADeviceRead =>
+        visit(deviceRead.device, arg)
+      case deviceWrite: ADeviceWrite =>
+        visit(deviceWrite.device, arg)
+        visit(deviceWrite.exp, arg)
+      case deviceDisconnect: ADeviceDisconnect =>
+        visit(deviceDisconnect.device, arg)
       case _: AAtomicExpr | _: AIdentifierDeclaration =>
     }
 }

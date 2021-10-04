@@ -25,6 +25,14 @@ object AstPrinters {
       printer.applyOrElse(n, {
         n: AstNode =>
           n match {
+            case ADevice(deviceType, deviceNumber, _) =>
+              s"Device(${deviceType.print(printer)}, ${deviceNumber.print(printer)})"
+            case ADeviceRead(device, _) =>
+              s"read device ${device.print(printer)}"
+            case ADeviceWrite(device, writeVal, _) =>
+              s"write ${writeVal.print(printer)} to device ${device.print(printer)}"
+            case ADeviceDisconnect(device, _) =>
+              s"disconnect device ${device.print(printer)}"
             case ACallFuncExpr(targetFun, args, _) =>
               s"${targetFun.print(printer)}(${args.map(_.print(printer)).mkString(",")})"
             case AIdentifier(name, _) =>

@@ -95,6 +95,10 @@ case class ARecordField(field: String, exp: AExpr, loc: Loc)
 
 case class AFieldAccess(record: AExpr, field: String, loc: Loc) extends AExpr with AAtomicExpr
 
+case class ADevice(deviceType: ANumber, deviceNumber: ANumber, loc: Loc) extends AExpr
+
+case class ADeviceRead(device: AIdentifier, loc: Loc) extends AExpr
+
 //////////////// Statements //////////////////////////
 
 sealed trait AStmt extends AstNode
@@ -148,6 +152,10 @@ case class AErrorStmt(exp: AExpr, loc: Loc) extends AStmtInNestedBlock
 case class AVarStmt(declIds: List[AIdentifierDeclaration], loc: Loc) extends AStmt
 
 case class AWhileStmt(guard: AExpr, innerBlock: AStmtInNestedBlock, loc: Loc) extends AStmtInNestedBlock
+
+case class ADeviceWrite(device: AIdentifier, exp: AExpr, loc: Loc) extends AStmt
+
+case class ADeviceDisconnect(device: AIdentifier, loc: Loc) extends AStmt
 
 //////////////// Program and function ///////////////
 
