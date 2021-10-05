@@ -6,7 +6,7 @@ import tip.lattices.IntervalLattice._
 import tip.lattices._
 import tip.solvers._
 
-trait IntervalAnalysisWidening extends ValueAnalysisMisc with Dependencies[CfgNode] {
+trait IntervalAnalysisWidening extends ValueAnalysisMisc with Dependencies[CfgNode] with FinalWarnings {
 
   import tip.cfg.CfgOps._
 
@@ -49,6 +49,22 @@ trait IntervalAnalysisWidening extends ValueAnalysisMisc with Dependencies[CfgNo
     }
 }
 
+/**
+  * A mixin for remembering the latest message for each location.
+  */
+trait FinalWarnings extends ValueAnalysisMisc {
+  val warnings = collection.mutable.LinkedHashMap[String, String]()
+  override def saveWarning(key: String, msg: String): Unit = {
+    warnings(key) = msg
+  }
+  def printWarnings() = {
+    println("Device write analysis results:")
+    for ((key,msg) <- warnings) {
+      println(" " + key + ": " + msg)
+    }
+  }
+}
+
 object IntervalAnalysis {
 
   object Intraprocedural {
@@ -59,7 +75,14 @@ object IntervalAnalysis {
     class WorklistSolverWithWidening(cfg: IntraproceduralProgramCfg)(implicit declData: DeclarationData)
         extends IntraprocValueAnalysisWorklistSolverWithReachability(cfg, IntervalLattice)
         with WorklistFixpointSolverWithReachabilityAndWidening[CfgNode]
-        with IntervalAnalysisWidening
+        with IntervalAnalysisWidening {
+
+      override def analyze(): lattice.Element = {
+        val result = super.analyze()
+        printWarnings()
+        result
+      }
+    }
 
     /**
       * Interval analysis, using the worklist solver with init, widening, and narrowing.
@@ -68,6 +91,12 @@ object IntervalAnalysis {
         extends IntraprocValueAnalysisWorklistSolverWithReachability(cfg, IntervalLattice)
         with WorklistFixpointSolverWithReachabilityAndWideningAndNarrowing[CfgNode]
         with IntervalAnalysisWidening {
+
+      override def analyze(): lattice.Element = {
+        val result = super.analyze()
+        printWarnings()
+        result
+      }
 
       val narrowingSteps = 5
     }

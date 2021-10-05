@@ -93,6 +93,8 @@ object SignLattice extends FlatLattice[SignElement.Value] with LatticeWithOps {
 
   def gt(a: Element, b: Element): Element = lookup(absGt, a, b)
 
+  override def device(deviceType: Int): SignLattice.Element = ???
+
   def main(args: Array[String]): Unit = {
     println("Testing plus...")
     for (a <- signValues.keys) {

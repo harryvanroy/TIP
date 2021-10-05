@@ -52,9 +52,13 @@ trait ValueAnalysisMisc {
           case _ => ???
         }
       case _: AInput => valuelattice.top
+      case deviceCreate: ADevice => device(deviceCreate.deviceType.value)
       case _ => ???
     }
   }
+
+  /** Attach a static analysis warning message to this syntactic construct. */
+  def saveWarning(loc: String, msg: String): Unit = ???
 
   /**
     * Transfer function for state lattice elements.

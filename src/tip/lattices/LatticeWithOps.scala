@@ -39,4 +39,16 @@ trait LatticeWithOps extends Lattice {
     * Abstract greater-than.
     */
   def gt(a: Element, b: Element): Element
+
+  def device(deviceType: Int): Element
+
+
+
+
+
+
+
+
+
+
 }
