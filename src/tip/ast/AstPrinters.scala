@@ -32,7 +32,7 @@ object AstPrinters {
             case ADeviceWrite(device, writeVal, _) =>
               s"${device.print(printer)}.write(${writeVal.print(printer)})"
             case ADeviceDisconnect(device, _) =>
-              s"disconnect device ${device.print(printer)}"
+              s"${device.print(printer)}.disconnect"
             case ACallFuncExpr(targetFun, args, _) =>
               s"${targetFun.print(printer)}(${args.map(_.print(printer)).mkString(",")})"
             case AIdentifier(name, _) =>
