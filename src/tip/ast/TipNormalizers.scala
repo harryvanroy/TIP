@@ -96,6 +96,10 @@ class Normalizer {
         nestedBlock(stmt.copy(guard = normalizeExpr(stmt.guard), ifBranch = ifBranch2, elseBranch = elseBranch2))
       case stmt: AOutputStmt =>
         nestedBlock(stmt.copy(exp = normalizeExpr(stmt.exp)))
+      case stmt: ADeviceWrite =>
+        nestedBlock(stmt.copy(exp = normalizeExpr(stmt.exp)))
+      case stmt: ADeviceDisconnect =>
+        stmt
       case stmt: AErrorStmt =>
         nestedBlock(stmt.copy(exp = normalizeExpr(stmt.exp)))
       case stmt: AWhileStmt =>
