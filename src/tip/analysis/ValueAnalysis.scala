@@ -67,6 +67,11 @@ trait ValueAnalysisMisc {
   /** Attach a static analysis warning message to this syntactic construct. */
   def saveWarning(loc: String, msg: String): Unit = ???
 
+  def gtAssert(x: valuelattice.Element, y: valuelattice.Element, negate: Boolean): valuelattice.Element = ???
+
+  def leqAssert(x: valuelattice.Element, y: valuelattice.Element, negate: Boolean): valuelattice.Element = ???
+
+  def contained(x: valuelattice.Element, y: valuelattice.Element): Boolean = ???
 
   /**
     * Transfer function for state lattice elements.
@@ -81,10 +86,10 @@ trait ValueAnalysisMisc {
         r.data match {
           // var declarations
           case varr: AVarStmt => s ++ (for (v <- varr.declIds) yield (v,valuelattice.bottom)) //<--- Complete here
-          case AAssert(guard: AExpr, _) => {
+          case AAssert(guard: AExpr, negate: Boolean, _) => {
             guard match {
-              case ABinaryOp(operator: Operator, left: AExpr, right: AIdentifier, _) => s + (right.declaration -> gt(eval(left, s), eval(right, s)))
-              case ABinaryOp(operator: Operator, left: AIdentifier, right: AExpr, _) => s + (left.declaration -> gt(eval(left, s), eval(right, s)))
+              case ABinaryOp(operator: Operator, left: AExpr, right: AIdentifier, _) => s + (right.declaration -> leqAssert(eval(right, s), eval(left, s), negate))
+              case ABinaryOp(operator: Operator, left: AIdentifier, right: AExpr, _) => s + (left.declaration -> gtAssert(eval(left, s), eval(right, s), negate))
               case _ => s
             }
           }
@@ -97,7 +102,10 @@ trait ValueAnalysisMisc {
               case (IntNum(0), IntNum(9)) => "Flow"
               case _ => ???
             }
-            if (gt(eval(exp, s), eval(device, s)) == (IntNum(0), IntNum(1))) {
+
+            val deviceInterval = eval(device, s)
+            val writeInterval = eval(exp, s)
+            if (contained(deviceInterval, writeInterval)) {
               saveWarning("Write:" + loc.toString, "safe")
             } else {
               saveWarning("Write:" + loc.toString, s"WARNING: ${deviceType} write may be outside bounds")

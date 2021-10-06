@@ -157,7 +157,7 @@ case class ADeviceWrite(device: AIdentifier, exp: AExpr, loc: Loc) extends AStmt
 
 case class ADeviceDisconnect(device: AIdentifier, loc: Loc) extends AStmtInNestedBlock
 
-case class AAssert(guard: AExpr, loc: Loc) extends AStmtInNestedBlock
+case class AAssert(guard: AExpr, negate: Boolean = false, loc: Loc) extends AStmtInNestedBlock
 
 //////////////// Program and function ///////////////
 
