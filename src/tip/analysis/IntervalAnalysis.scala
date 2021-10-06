@@ -48,13 +48,11 @@ trait IntervalAnalysisWidening extends ValueAnalysisMisc with Dependencies[CfgNo
         }.toMap)
     }
 
-  override def gtAssert(x: valuelattice.Element, y: valuelattice.Element, negate: Boolean): valuelattice.Element = {
-    // gt([l1, h1], [l2, h2]) = [l1, h1] u [l2, ∞]
+  override def gtAssert(x: valuelattice.Element, y: valuelattice.Element): valuelattice.Element = {
     if (x._2 < y._2) EmptyInterval else (y._2, x._2)
   }
 
-  override def leqAssert (x: valuelattice.Element, y: valuelattice.Element, negate: Boolean): valuelattice.Element =
-    // leq([l1, h1], [l2, h2]) = [l1, h1] u [-inf, h2]
+  override def leqAssert (x: valuelattice.Element, y: valuelattice.Element): valuelattice.Element =
     if (x._1 > y._2) EmptyInterval else (x._1, y._2)
 
   override def contained(deviceInterval: valuelattice.Element, writeInterval: valuelattice.Element): Boolean =

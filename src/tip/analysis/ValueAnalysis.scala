@@ -67,9 +67,9 @@ trait ValueAnalysisMisc {
   /** Attach a static analysis warning message to this syntactic construct. */
   def saveWarning(loc: String, msg: String): Unit = ???
 
-  def gtAssert(x: valuelattice.Element, y: valuelattice.Element, negate: Boolean): valuelattice.Element = ???
+  def gtAssert(x: valuelattice.Element, y: valuelattice.Element): valuelattice.Element = ???
 
-  def leqAssert(x: valuelattice.Element, y: valuelattice.Element, negate: Boolean): valuelattice.Element = ???
+  def leqAssert(x: valuelattice.Element, y: valuelattice.Element): valuelattice.Element = ???
 
   def contained(x: valuelattice.Element, y: valuelattice.Element): Boolean = ???
 
@@ -86,10 +86,10 @@ trait ValueAnalysisMisc {
         r.data match {
           // var declarations
           case varr: AVarStmt => s ++ (for (v <- varr.declIds) yield (v,valuelattice.bottom)) //<--- Complete here
-          case AAssert(guard: AExpr, negate: Boolean, _) => {
+          case AAssert(guard: AExpr, _) => {
             guard match {
-              case ABinaryOp(operator: Operator, left: AExpr, right: AIdentifier, _) => s + (right.declaration -> leqAssert(eval(right, s), eval(left, s), negate))
-              case ABinaryOp(operator: Operator, left: AIdentifier, right: AExpr, _) => s + (left.declaration -> gtAssert(eval(left, s), eval(right, s), negate))
+              case ABinaryOp(operator: Operator, left: AExpr, right: AIdentifier, _) => s + (right.declaration -> leqAssert(eval(right, s), eval(left, s)))
+              case ABinaryOp(operator: Operator, left: AIdentifier, right: AExpr, _) => s + (left.declaration -> gtAssert(eval(left, s), eval(right, s)))
               case _ => s
             }
           }

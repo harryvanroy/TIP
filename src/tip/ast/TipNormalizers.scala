@@ -94,7 +94,22 @@ class Normalizer {
         addStatement(AAssert(guard=normalizeExpr(stmt.guard), loc=stmt.loc))
         val ifBranch2 = normalizeStmtInNestedBlock(stmt.ifBranch)
         val elseBranch2 = stmt.elseBranch.map(s => {
-          addStatement(AAssert(guard=normalizeExpr(stmt.guard), negate=true, loc=stmt.loc))
+          val newGuard = stmt.guard match {
+            case ABinaryOp(operator: Operator, left: AExpr, right: AIdentifier, loc) => {
+              val newExpr = ABinaryOp(Plus, left, ANumber(1, stmt.guard.loc), stmt.guard.loc)
+              ABinaryOp(operator, right, newExpr, loc)
+            }
+            case ABinaryOp(operator: Operator, left: AIdentifier, right: AExpr, loc) => {
+              val newExpr = ABinaryOp(Plus, right, ANumber(1, stmt.guard.loc), stmt.guard.loc)
+              ABinaryOp(operator, newExpr, left, loc)
+            }
+            case _ => {
+              println(stmt.guard.getClass.toString)
+              stmt.guard
+            }
+          }
+          println(newGuard)
+          addStatement(AAssert(guard=normalizeExpr(newGuard), loc=stmt.loc))
           normalizeStmtInNestedBlock(s)
         })
         nestedBlock(stmt.copy(guard = normalizeExpr(stmt.guard), ifBranch = ifBranch2, elseBranch = elseBranch2))
