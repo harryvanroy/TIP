@@ -70,6 +70,8 @@ object FragmentCfg {
           nodeBuilder(CfgStmtNode(data = node))
         case _: ADeviceWrite =>
           nodeBuilder(CfgStmtNode(data = node))
+        case _:AAssert =>
+          nodeBuilder(CfgStmtNode(data = node))
         case _: AErrorStmt =>
           nodeBuilder(CfgStmtNode(data = node))
         case _: AExpr | _: AIdentifierDeclaration | _: AProgram => ???

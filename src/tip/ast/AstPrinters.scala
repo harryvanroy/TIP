@@ -33,6 +33,8 @@ object AstPrinters {
               s"${device.print(printer)}.write(${writeVal.print(printer)})"
             case ADeviceDisconnect(device, _) =>
               s"${device.print(printer)}.disconnect"
+            case AAssert(guard, _) =>
+              s"assert ${guard.print(printer)};"
             case ACallFuncExpr(targetFun, args, _) =>
               s"${targetFun.print(printer)}(${args.map(_.print(printer)).mkString(",")})"
             case AIdentifier(name, _) =>

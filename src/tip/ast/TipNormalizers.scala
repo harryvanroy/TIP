@@ -91,15 +91,19 @@ class Normalizer {
         stmt.copy(body = stmt.body.map(normalizeStmtInNestedBlock))
       case stmt: AIfStmt =>
         // It is important to first normalizes the if/else branches before calling nestedBlock, so that added statements for each branch remain in the corresponding branch, and added statements for the guard are added before the if.
+        val assert = normalizeStmtInNestedBlock(AAssert(stmt.guard, stmt.loc))
         val ifBranch2 = normalizeStmtInNestedBlock(stmt.ifBranch)
+        val ifBranchWithAssert = ANestedBlockStmt(List(assert) ++ ANestedBlockStmt(List(ifBranch2), ifBranch2.loc).body, assert.loc)
         val elseBranch2 = stmt.elseBranch.map(normalizeStmtInNestedBlock)
-        nestedBlock(stmt.copy(guard = normalizeExpr(stmt.guard), ifBranch = ifBranch2, elseBranch = elseBranch2))
+        nestedBlock(stmt.copy(guard = normalizeExpr(stmt.guard), ifBranch = ifBranchWithAssert, elseBranch = elseBranch2))
       case stmt: AOutputStmt =>
         nestedBlock(stmt.copy(exp = normalizeExpr(stmt.exp)))
       case stmt: ADeviceWrite =>
         nestedBlock(stmt.copy(exp = normalizeExpr(stmt.exp)))
       case stmt: ADeviceDisconnect =>
         stmt
+      case stmt: AAssert =>
+        nestedBlock(stmt.copy(guard = normalizeExpr(stmt.guard)))
       case stmt: AErrorStmt =>
         nestedBlock(stmt.copy(exp = normalizeExpr(stmt.exp)))
       case stmt: AWhileStmt =>

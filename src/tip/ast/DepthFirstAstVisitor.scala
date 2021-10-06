@@ -76,6 +76,8 @@ trait DepthFirstAstVisitor[A] {
         visit(deviceWrite.exp, arg)
       case deviceDisconnect: ADeviceDisconnect =>
         visit(deviceDisconnect.device, arg)
+      case assert: AAssert =>
+        visit(assert.guard, arg)
       case _: AAtomicExpr | _: AIdentifierDeclaration =>
     }
 }
