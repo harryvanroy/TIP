@@ -68,7 +68,7 @@ trait FinalWarnings extends ValueAnalysisMisc {
   def printWarnings() = {
     println("Device write analysis results:")
     for ((key,msg) <- warnings) {
-      println(" " + key + ": " + msg)
+      println("  " + key + ": " + msg)
     }
   }
 }

@@ -54,6 +54,7 @@ trait ValueAnalysisMisc {
         }
       case _: AInput => valuelattice.top
       case deviceCreate: ADevice => device(deviceCreate.deviceType.value)
+      case deviceRead: ADeviceRead => env(deviceRead.device)
       case _ => ???
     }
   }
