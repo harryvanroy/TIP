@@ -26,6 +26,4 @@ object ConstantPropagationLattice extends FlatLattice[Int]() with LatticeWithOps
   def eqq(a: Element, b: Element): Element = apply((x, y) => if (x == y) 1 else 0, a, b)
 
   def gt(a: Element, b: Element): Element = apply((x, y) => if (x > y) 1 else 0, a, b)
-
-  override def device(deviceType: Int): ConstantPropagationLattice.Element = ???
 }

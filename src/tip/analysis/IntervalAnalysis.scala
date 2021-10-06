@@ -31,6 +31,14 @@ trait IntervalAnalysisWidening extends ValueAnalysisMisc with Dependencies[CfgNo
 
   private def maxB(a: IntervalLattice.Num) = B.filter(_ <= a).max
 
+  override def device(deviceType: Int): valuelattice.Element = {
+    deviceType match {
+      case 1 => (IntNum(0), IntNum(1))
+      case 2 => (IntNum(0), IntNum(100))
+      case 3 => (IntNum(0), IntNum(9))
+    }
+  }
+
   def widenInterval(x: valuelattice.Element, y: valuelattice.Element): valuelattice.Element =
     (x, y) match {
       case (IntervalLattice.EmptyInterval, _) => y

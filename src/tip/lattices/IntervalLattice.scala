@@ -63,14 +63,6 @@ object IntervalLattice extends LatticeWithOps {
     override def toString = "-inf"
   }
 
-  def device(deviceType: Int): Element = {
-    deviceType match {
-      case 0 => (IntNum(0), IntNum(1))
-      case 1 => (IntNum(0), IntNum(100))
-      case 2 => (IntNum(0), IntNum(9))
-    }
-  }
-
   /**
     * Number as interval.
     */

@@ -6,6 +6,7 @@ import tip.cfg._
 import tip.lattices._
 import tip.solvers._
 import tip.ast.AstNodeData.{AstNodeWithDeclaration, DeclarationData}
+import tip.lattices.IntervalLattice.{Element, IntNum}
 
 /**
   * General definitions for value analysis.
@@ -60,6 +61,9 @@ trait ValueAnalysisMisc {
   /** Attach a static analysis warning message to this syntactic construct. */
   def saveWarning(loc: String, msg: String): Unit = ???
 
+  def device(deviceType: Int): valuelattice.Element = ???
+
+
   /**
     * Transfer function for state lattice elements.
     */
@@ -67,6 +71,7 @@ trait ValueAnalysisMisc {
     NoPointers.assertContainsNode(n.data)
     NoCalls.assertContainsNode(n.data)
     NoRecords.assertContainsNode(n.data)
+    import valuelattice._
     n match {
       case r: CfgStmtNode =>
         r.data match {
@@ -75,6 +80,20 @@ trait ValueAnalysisMisc {
 
           // assignments
           case AAssignStmt(id: AIdentifier, right, _) => s + (id.declaration -> eval(right, s)) //<--- Complete here
+          case ADeviceWrite(device: AIdentifier, exp, loc) => {
+            val deviceType = eval(device, s) match {
+              case (IntNum(0), IntNum(1)) => "Switch"
+              case (IntNum(0), IntNum(100)) => "Temperature"
+              case (IntNum(0), IntNum(9)) => "Flow"
+              case _ => ???
+            }
+            if (gt(eval(exp, s), eval(device, s)) == (IntNum(0), IntNum(1))) {
+              saveWarning("Write:" + loc.toString, "safe")
+            } else {
+              saveWarning("Write:" + loc.toString, s"WARNING: ${deviceType} write may be outside bounds")
+            }
+            s
+          }
 
           // all others: like no-ops
           case _ => s

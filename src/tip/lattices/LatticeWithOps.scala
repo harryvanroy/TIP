@@ -40,8 +40,6 @@ trait LatticeWithOps extends Lattice {
     */
   def gt(a: Element, b: Element): Element
 
-  def device(deviceType: Int): Element
-
 
 
 
