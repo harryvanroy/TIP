@@ -53,7 +53,12 @@ trait ValueAnalysisMisc {
           case _ => ???
         }
       case _: AInput => valuelattice.top
-      case deviceCreate: ADevice => device(deviceCreate.deviceType.value)
+      case deviceCreate: ADevice => deviceCreate.deviceType.value match {
+        case 1 => lub(num(0), num(1))
+        case 2 => lub(num(0), num(100))
+        case 3 => lub(num(0), num(9))
+        case _ => valuelattice.top
+      }
       case deviceRead: ADeviceRead => env(deviceRead.device)
       case _ => ???
     }
@@ -61,8 +66,6 @@ trait ValueAnalysisMisc {
 
   /** Attach a static analysis warning message to this syntactic construct. */
   def saveWarning(loc: String, msg: String): Unit = ???
-
-  def device(deviceType: Int): valuelattice.Element = ???
 
 
   /**
