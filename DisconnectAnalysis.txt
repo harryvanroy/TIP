@@ -1,0 +1,13 @@
+The value lattice used is a flat lattice with elements True and False corresponding to whether or not the device has
+been disconnected (DisconnectLattice).
+
+Added eval functions:
+eval(sigma, Device(deviceType, deviceNum)) = False
+eval(sigma, _) = Bottom
+
+Added constraint rules:
+d.disconnect: [[v]] = JOIN(v)[d -> True]
+
+The analysis is very similar to sign analysis in that it is a forward may dataflow analysis. The state lattice is checked
+at any return statements and a warning is printed if any of the value lattice elements are False or Top (Non-device identifiers
+are evaluated as Bottom and therefore do not affect the analysis).
