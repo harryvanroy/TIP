@@ -91,24 +91,26 @@ class Normalizer {
         stmt.copy(body = stmt.body.map(normalizeStmtInNestedBlock))
       case stmt: AIfStmt =>
         // It is important to first normalizes the if/else branches before calling nestedBlock, so that added statements for each branch remain in the corresponding branch, and added statements for the guard are added before the if.
+        val newGuard = stmt.guard match {
+          case ABinaryOp(operator: Operator, left: AExpr, right: AIdentifier, loc) => {
+            val newExpr = ABinaryOp(Minus, left, ANumber(1, stmt.guard.loc), stmt.guard.loc)
+            ABinaryOp(operator, right, newExpr, loc)
+          }
+          case ABinaryOp(operator: Operator, left: AIdentifier, right: AExpr, loc) => {
+            val newExpr = ABinaryOp(Plus, right, ANumber(1, stmt.guard.loc), stmt.guard.loc)
+            ABinaryOp(operator, newExpr, left, loc)
+          }
+          case _ => ANumber(1, stmt.guard.loc)
+        }
+
         addStatement(AAssert(guard=normalizeExpr(stmt.guard), loc=stmt.loc))
         val ifBranch2 = normalizeStmtInNestedBlock(stmt.ifBranch)
         val elseBranch2 = stmt.elseBranch.map(s => {
-          val newGuard = stmt.guard match {
-            case ABinaryOp(operator: Operator, left: AExpr, right: AIdentifier, loc) => {
-              val newExpr = ABinaryOp(Minus, left, ANumber(1, stmt.guard.loc), stmt.guard.loc)
-              ABinaryOp(operator, right, newExpr, loc)
-            }
-            case ABinaryOp(operator: Operator, left: AIdentifier, right: AExpr, loc) => {
-              val newExpr = ABinaryOp(Plus, right, ANumber(1, stmt.guard.loc), stmt.guard.loc)
-              ABinaryOp(operator, newExpr, left, loc)
-            }
-            case _ => ANumber(1, stmt.guard.loc)
-          }
-          addStatement(AAssert(guard=normalizeExpr(newGuard), loc=stmt.loc))
-          normalizeStmtInNestedBlock(s)
+          addStatement(AAssert(newGuard, loc=stmt.loc))
+          normalizeStmtInNestedBlock(nestedBlock(s))
         })
-        nestedBlock(stmt.copy(guard = normalizeExpr(stmt.guard), ifBranch = ifBranch2, elseBranch = elseBranch2))
+        val elseBranch = Option(elseBranch2 getOrElse nestedBlock(AAssert(newGuard, stmt.loc)))
+        nestedBlock(stmt.copy(guard = normalizeExpr(stmt.guard), ifBranch = ifBranch2, elseBranch = elseBranch))
       case stmt: AOutputStmt =>
         nestedBlock(stmt.copy(exp = normalizeExpr(stmt.exp)))
       case stmt: ADeviceWrite =>
