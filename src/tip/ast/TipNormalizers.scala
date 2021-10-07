@@ -103,7 +103,7 @@ class Normalizer {
               val newExpr = ABinaryOp(Plus, right, ANumber(1, stmt.guard.loc), stmt.guard.loc)
               ABinaryOp(operator, newExpr, left, loc)
             }
-            case _ => stmt.guard
+            case _ => ANumber(1, stmt.guard.loc)
           }
           addStatement(AAssert(guard=normalizeExpr(newGuard), loc=stmt.loc))
           normalizeStmtInNestedBlock(s)

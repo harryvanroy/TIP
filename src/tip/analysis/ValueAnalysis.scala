@@ -69,7 +69,7 @@ trait ValueAnalysisMisc {
 
   def gtAssert(x: valuelattice.Element, y: valuelattice.Element): valuelattice.Element = ???
 
-  def leqAssert(x: valuelattice.Element, y: valuelattice.Element): valuelattice.Element = ???
+  def  leqAssert(x: valuelattice.Element, y: valuelattice.Element): valuelattice.Element = ???
 
   def contained(x: valuelattice.Element, y: valuelattice.Element): Boolean = ???
 
