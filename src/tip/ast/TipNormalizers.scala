@@ -96,7 +96,7 @@ class Normalizer {
         val elseBranch2 = stmt.elseBranch.map(s => {
           val newGuard = stmt.guard match {
             case ABinaryOp(operator: Operator, left: AExpr, right: AIdentifier, loc) => {
-              val newExpr = ABinaryOp(Plus, left, ANumber(1, stmt.guard.loc), stmt.guard.loc)
+              val newExpr = ABinaryOp(Minus, left, ANumber(1, stmt.guard.loc), stmt.guard.loc)
               ABinaryOp(operator, right, newExpr, loc)
             }
             case ABinaryOp(operator: Operator, left: AIdentifier, right: AExpr, loc) => {
@@ -105,7 +105,6 @@ class Normalizer {
             }
             case _ => stmt.guard
           }
-          println(newGuard)
           addStatement(AAssert(guard=normalizeExpr(newGuard), loc=stmt.loc))
           normalizeStmtInNestedBlock(s)
         })
