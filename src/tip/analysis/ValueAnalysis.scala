@@ -85,7 +85,7 @@ trait ValueAnalysisMisc {
       case r: CfgStmtNode =>
         r.data match {
           // var declarations
-          case varr: AVarStmt => s ++ (for (v <- varr.declIds) yield (v,valuelattice.bottom)) //<--- Complete here
+          case varr: AVarStmt => s ++ (for (v <- varr.declIds) yield (v,valuelattice.bottom))
           case AAssert(guard: AExpr, _) => {
             guard match {
               case ABinaryOp(operator: Operator, left: AExpr, right: AIdentifier, _) => s + (right.declaration -> leqAssert(eval(right, s), eval(left, s)))
@@ -94,7 +94,7 @@ trait ValueAnalysisMisc {
             }
           }
           // assignments
-          case AAssignStmt(id: AIdentifier, right, _) => s + (id.declaration -> eval(right, s)) //<--- Complete here
+          case AAssignStmt(id: AIdentifier, right, _) => s + (id.declaration -> eval(right, s))
           case ADeviceWrite(device: AIdentifier, exp, loc) => {
             val deviceType = eval(device, s) match {
               case (IntNum(0), IntNum(1)) => "Switch"

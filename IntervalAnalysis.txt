@@ -1,0 +1,20 @@
+eval(sigma, Device(deviceType, deviceNum)) = [0, 1] if deviceType == 1
+                                             [0, 100] if deviceType == 2
+                                             [0, 9] if deviceType == 3
+
+eval(sigma, d.read) = sigma(d)
+
+d.write(E): [[v]] = JOIN(v)
+
+d.disconnect: [[v]] = JOIN(v)
+
+assert(X > E): [[v]] = JOIN(v)[X -> gt(JOIN (v)(X), eval(JOIN (v), E))]
+
+    where gt([l1, l2], [h1, h2]) = bottom if l2 < h2
+                                   [l2] else
+where gt =   val addOneY = y match {
+                 case (_, IntNum(i)) => IntNum(i+1)
+                 case _ => y._2
+               }
+               if (x._2 < y._2) valuelattice.bottom else (addOneY, x._2)
+assert(E > X):
