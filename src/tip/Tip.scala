@@ -116,6 +116,7 @@ object Tip extends App {
         | -reaching          enable reaching definitions analysis
         | -constprop         enable constant propagation analysis
         | -interval          enable interval analysis
+        | -disconnect        enable device disconnect analysis
         | -copyconstprop     enable copy constant propagation analysis
         |
         | For the dataflow analyses, the choice of fixpoint solver can be chosen by these modifiers
@@ -329,7 +330,7 @@ object Tip extends App {
           options.andersen = true
         case "-steensgaard" =>
           options.steensgaard = true
-        case "-sign" | "-livevars" | "-available" | "-vbusy" | "-reaching" | "-constprop" | "-interval" | "-copyconstprop" =>
+        case "-sign" | "-livevars" | "-available" | "-vbusy" | "-reaching" | "-constprop" | "-interval" | "-copyconstprop" | "-disconnect" =>
           options.dfAnalysis += dfa.withName(args(i).drop(1)) -> {
             if (i + 1 < args.length && dfo.values.map(_.toString()).contains(args(i + 1))) {
               i = i + 1

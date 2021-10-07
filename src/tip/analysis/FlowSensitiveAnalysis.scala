@@ -50,6 +50,7 @@ object FlowSensitiveAnalysis {
       case AnalysisOption.`simple` =>
         Some(kind match {
           case Analysis.sign => new SimpleSignAnalysis(typedCfg.left.get); //  same functionality as SignAnalysis.Intraprocedural.SimpleSolver(typedCfg.left.get)
+          case Analysis.disconnect => new DisconnectAnalysis(typedCfg.left.get);
           case Analysis.livevars => new LiveVarsAnalysisSimpleSolver(typedCfg.left.get)
           case Analysis.available => new AvailableExpAnalysisSimpleSolver(typedCfg.left.get)
           //case Analysis.vbusy => new VeryBusyExpAnalysisSimpleSolver(typedCfg.left.get) <--- Complete here
@@ -168,6 +169,6 @@ object FlowSensitiveAnalysis {
     * A flow sensitive analysis kind
     */
   object Analysis extends Enumeration {
-    val sign, livevars, available, vbusy, reaching, constprop, interval, copyconstprop = Value
+    val sign, livevars, available, vbusy, reaching, constprop, interval, copyconstprop, disconnect = Value
   }
 }
