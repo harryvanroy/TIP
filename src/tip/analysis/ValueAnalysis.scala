@@ -53,12 +53,14 @@ trait ValueAnalysisMisc {
           case _ => ???
         }
       case _: AInput => valuelattice.top
+      // return interval corresponding to device type
       case deviceCreate: ADevice => deviceCreate.deviceType.value match {
         case 1 => lub(num(0), num(1))
         case 2 => lub(num(0), num(100))
         case 3 => lub(num(0), num(9))
         case _ => valuelattice.top
       }
+      // lookup interval of device identifier
       case deviceRead: ADeviceRead => env(deviceRead.device)
       case _ => ???
     }
@@ -67,10 +69,13 @@ trait ValueAnalysisMisc {
   /** Attach a static analysis warning message to this syntactic construct. */
   def saveWarning(loc: String, msg: String): Unit = ???
 
+  /** Dummy method - actual implementation can be found in IntervalAnalysis.scala */
   def gtAssert(x: valuelattice.Element, y: valuelattice.Element): valuelattice.Element = ???
 
+  /** Dummy method - actual implementation can be found in IntervalAnalysis.scala */
   def leqAssert(x: valuelattice.Element, y: valuelattice.Element): valuelattice.Element = ???
 
+  /** Dummy method - actual implementation can be found in IntervalAnalysis.scala */
   def contained(x: valuelattice.Element, y: valuelattice.Element): Boolean = ???
 
   /**
@@ -96,6 +101,7 @@ trait ValueAnalysisMisc {
           // assignments
           case AAssignStmt(id: AIdentifier, right, _) => s + (id.declaration -> eval(right, s))
           case ADeviceWrite(device: AIdentifier, exp, loc) => {
+            // for printing the device type
             val deviceType = eval(device, s) match {
               case (IntNum(0), IntNum(1)) => "Switch"
               case (IntNum(0), IntNum(100)) => "Temperature"
@@ -103,6 +109,7 @@ trait ValueAnalysisMisc {
               case _ => ???
             }
 
+            // check interval of write is contained in device interval
             val deviceInterval = eval(device, s)
             val writeInterval = eval(exp, s)
             if (contained(deviceInterval, writeInterval)) {

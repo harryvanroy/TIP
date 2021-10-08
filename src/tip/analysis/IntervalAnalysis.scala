@@ -48,6 +48,9 @@ trait IntervalAnalysisWidening extends ValueAnalysisMisc with Dependencies[CfgNo
         }.toMap)
     }
 
+  /**
+    * Used for constraining the interval of identifier in assert X > E
+    */
   override def gtAssert(x: valuelattice.Element, y: valuelattice.Element): valuelattice.Element = {
     val addOneY = y match {
       case (IntNum(i), _) => IntNum(i+1)
@@ -56,6 +59,9 @@ trait IntervalAnalysisWidening extends ValueAnalysisMisc with Dependencies[CfgNo
     if (y._1 > x._2) valuelattice.bottom else (addOneY, x._2)
   }
 
+  /**
+    * Used for constraining the interval of identifier in assert E > X
+    */
   override def leqAssert (x: valuelattice.Element, y: valuelattice.Element): valuelattice.Element = {
     val minusOneY = y match {
       case (_ ,IntNum(i)) => IntNum(i-1)
@@ -64,6 +70,9 @@ trait IntervalAnalysisWidening extends ValueAnalysisMisc with Dependencies[CfgNo
     if (x._1 > y._2) valuelattice.bottom else (x._1, minusOneY)
   }
 
+  /**
+    * Returns true if the interval of the write expression is contained in the interval of the device.
+    */
   override def contained(deviceInterval: valuelattice.Element, writeInterval: valuelattice.Element): Boolean =
     if (writeInterval._1 < deviceInterval._1 || writeInterval._2 > deviceInterval._2) false else true
 }
